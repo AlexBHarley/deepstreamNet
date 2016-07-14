@@ -6,7 +6,7 @@ namespace DeepStreamNet
     /// <summary>
     /// DeepStreamException
     /// </summary>
-    [Serializable]
+    [DataContract]
     public class DeepStreamException : Exception
     {
         /// <summary>
@@ -45,17 +45,6 @@ namespace DeepStreamNet
         public DeepStreamException(string error, string message)
             : base(error+" - "+message)
         {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected DeepStreamException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-
         }
     }
 }

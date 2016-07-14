@@ -275,8 +275,7 @@ namespace DeepStreamNet
         {
             if (disposing)
             {
-                client.Close();
-                (client as IDisposable).Dispose();
+                client.Dispose();
             }
         }
     }

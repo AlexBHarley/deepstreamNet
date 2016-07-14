@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace DeepStreamNet
 {
-    /// <summary>
-    /// DeepStreamClient
-    /// </summary>
     public class DeepStreamClient : IDisposable
     {
         readonly Connection connection;

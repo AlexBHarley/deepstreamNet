@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DeepStreamNet
+namespace ConsoleApp1
 {
     class DisposableAction : IDisposable
     {
