@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DeepStreamNet.Internals;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -137,7 +138,7 @@ namespace DeepStreamNet
                 while ((result = await stream.ReadAsync(buffer, 0, buffer.Length, cts).ConfigureAwait(false)) != 0)
                 {
                     var enc = sb + Encoding.UTF8.GetString(buffer, 0, result);
-
+                    Console.WriteLine(enc);
                     var groups = enc.Split(Constants.GroupSeperator);
 
                     for (int i = 0; i < groups.Length - 1; i++)
@@ -159,12 +160,15 @@ namespace DeepStreamNet
                 return;
             }
 
+            var message = MessageParser.ParseMessage(value, this);
+
             var responseAction = new Action(split[1]);
             var action = new Action(split.Length == 2 ? null : split[2]);
             var topic = new Topic(split[0]);
 
             if (topic == Topic.AUTH)
             {
+                handleAuthResponse( )
                 if (responseAction == Action.ACK)
                 {
                     OnAcknoledged(topic, action, null);
@@ -176,6 +180,33 @@ namespace DeepStreamNet
                 else
                 {
                     OnError(topic, action, Constants.Errors.MESSAGE_PARSE_ERROR, "Unknown action " + action);
+                }
+            }
+            else if (topic == Topic.CONNECTION)
+            {
+                if (responseAction == Action.ACK)
+                {
+                    //THIS.SETSTATE(CONNECTIONSTATE.AWAITING_AUTHENTICATION);
+                    //IF (THIS.AUTHPARAMETERS != NULL)
+                    //{
+                    //    THIS.SENDAUTHMESSAGE();
+                    //}
+                }
+                else if (responseAction == Action.CHALLENGE)
+                {
+                    //this.setState(ConnectionState.CHALLENGING);
+                    //this.endpoint.send(MessageBuilder.getMsg(Topic.CONNECTION, Actions.CHALLENGE_RESPONSE, this.originalUrl));
+                }
+                else if (responseAction == Action.REJECTION)
+                {
+                    //this.challengeDenied = true;
+                    //this.close();
+                }
+                else if (responseAction == Action.REDIRECT)
+                {
+                    //this.url = message.data[0];
+                    //this.redirecting = true;
+                    //this.endpoint.close();
                 }
             }
             else if (topic == Topic.EVENT)
@@ -255,12 +286,12 @@ namespace DeepStreamNet
             }
         }
 
-        void OnAcknoledged(Topic topic, Action action, string identifier)
+        internal void OnAcknoledged(Topic topic, Action action, string identifier)
         {
             Acknoledged?.Invoke(this, new AcknoledgedArgs(topic, action, identifier));
         }
 
-        void OnError(Topic topic, Action action, string error, string message)
+        internal void OnError(Topic topic, Action action, string error, string message)
         {
             Error?.Invoke(this, new ErrorArgs(topic, action, error, message));
         }

@@ -20,6 +20,14 @@ namespace DeepStreamNet
             }
         }
 
+        public static Topic CONNECTION
+        {
+            get
+            {
+                return new Topic("C");
+            }
+        }
+
         public static Topic ERROR
         {
             get
@@ -74,6 +82,14 @@ namespace DeepStreamNet
         {
             Identifier = identifier;
         }
+
+        public static Topic? GetTopic(string topic)
+        {
+            Topic t;
+            Enum.TryParse(topic, out t);
+            return t;
+        }
+    }
 
         public static bool operator ==(Topic t1, Topic t2)
         {

@@ -36,6 +36,13 @@ namespace DeepStreamNet
             Identifier = identifier;
         }
 
+        public static Action? GetAction(string action)
+        {
+            Action a;
+            Enum.TryParse(action, out a);
+            return a;
+        }
+
         public static bool operator ==(Action a1, Action a2)
         {
             return a1.Equals(a2);
